@@ -3,7 +3,7 @@ An burpsuite extension to bypass 403 restricted directory
 
 ## Installation
 
-`BurpSuite -> Extender -> Extensions -> Add -> Choose 403bypasser.py`
+`BurpSuite -> Extender -> Extensions -> Add -> Extension Type: Python -> Select file: 403bypasser.py -> Next till Fininsh`
 
 ## Screenshot
 <img src="ScreenShot.png" width="450"/>
