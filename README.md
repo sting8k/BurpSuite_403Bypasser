@@ -6,8 +6,7 @@ An burpsuite extension to bypass 403 restricted directory
 `BurpSuite -> Extender -> Extensions -> Add -> Choose 403bypasser.py`
 
 ## Screenshot
-![Screenshot](ScreenShot.png){:height="150px" width="150px"}
-
+![Screenshot](ScreenShot.png | width=100)
 ## References:
 * [https://twitter.com/iam_j0ker/status/1324354024657711106?s=20](https://twitter.com/iam_j0ker/status/1324354024657711106?s=20)
 * [https://twitter.com/jae_hak99/status/1297556269960540161?s=20](https://twitter.com/jae_hak99/status/1297556269960540161?s=20)
