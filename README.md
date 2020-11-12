@@ -1,5 +1,5 @@
 # 403Bypasser
-An burpsuite extension to bypass 403 restricted directory
+An burpsuite extension to bypass 403 restricted directory. By using PassiveScan (default enabled), each 403 request will be scanned by this extension, so just add to burpsuite and enjoy.
 
 ## Installation
 
