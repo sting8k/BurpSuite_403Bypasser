@@ -31,9 +31,7 @@ class BurpExtender(IBurpExtender, IScannerCheck):
 
     def _get_matches(self, sttcode):
         #response = self._helpers.bytesToString(response)
-        if sttcode == 403:
-            return True
-        return False
+        return sttcode == 403
 
     def rplHeader(self, headerStr, headerName, newHeader):
         headerStr = re.sub('^'+headerName+':.*?$', newHeader, headerStr, flags=re.I|re.M)
