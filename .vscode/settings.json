@@ -1,0 +1,6 @@
+{
+    "explorer.excludeGitIgnore": false,
+    "window.autoDetectColorScheme": true,
+    "window.closeWhenEmpty": true,
+    "debug.autoExpandLazyVariables": true
+}
